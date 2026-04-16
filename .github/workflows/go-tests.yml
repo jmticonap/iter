@@ -1,0 +1,30 @@
+name: Go Unit Tests
+
+on:
+  pull_request:
+    # Esto asegura que se corra al abrir el PR y en cada commit adicional (sync)
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - develop
+      - release
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+          cache: true        # Habilita el cache de dependencias automáticamente
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run Unit Tests
+        run: go test -v -cover ./test/... -coverpkg=./...l
