@@ -10,18 +10,17 @@ import (
 	"syscall"
 	"time"
 
-	rt "github.com/jmticonap/iter/router"
 	u "github.com/jmticonap/iter/utils"
 )
 
-func NewIter(routesList *rt.Routes) {
+func NewIter(mux *http.ServeMux) {
 	APP_PORT := u.GetEnvOrDefault("APP_PORT", "80")
 
+	// (rt.HttpRouterHandler(routesList.Routes))
+
 	server := &http.Server{
-		Addr: fmt.Sprintf(":%s", APP_PORT),
-		Handler: http.HandlerFunc(
-			rt.HttpRouterHandler(routesList.Routes),
-		),
+		Addr:    fmt.Sprintf(":%s", APP_PORT),
+		Handler: mux,
 		// IMPORTANTE: Configura timeouts para que JMeter no deje conexiones abiertas
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
